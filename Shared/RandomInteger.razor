@@ -1,0 +1,13 @@
+﻿
+<label>Min</label>
+<input type="number" step=1 @bind="Generator.Min" />
+<br />
+<label>Max</label>
+<input type="number" step=1 @bind="Generator.Max" />
+<br />
+
+@code
+{
+	[Parameter]
+	public NameGenToolkit.RandomInteger Generator { get; set; } = null!;
+}

@@ -1,0 +1,13 @@
+﻿
+<label>Min</label>
+<input type="number" step=2 @bind="Generator.MinLength" />
+<br />
+<label>Max</label>
+<input type="number" step=2 @bind="Generator.MaxLength" />
+<br />
+
+@code 
+{
+	[Parameter]
+	public NameGenToolkit.ConsonantVowel Generator { get; set; } = null!;
+}

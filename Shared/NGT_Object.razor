@@ -1,0 +1,29 @@
+﻿<div class="col card bg-light">
+	<h3>@Generator.Name</h3>
+
+	<DynamicComponent Type="@GetComponentForGen()" Parameters="@GetComponentParameters()" />
+
+	<button @onclick=GenerateExample>Example</button>
+	<card><samp>@Example</samp></card>
+</div>
+@code
+{
+	[Parameter]
+	public NameGenToolkit.NameGenerator Generator { get; set; } = null!;
+	public string Example = "";
+
+	public void GenerateExample() => Example = Generator.Example();
+
+	public Type? GetComponentForGen()
+	{
+		var genTypeName = Generator.GetType().Name;
+		return Type.GetType(GetType().Namespace + "." + genTypeName);
+	}
+
+	public Dictionary<string, object> GetComponentParameters()
+	{
+		Dictionary<string, object> map = new();
+		map["Generator"] = Generator;
+		return map;
+	}
+}

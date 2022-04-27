@@ -1,0 +1,91 @@
+﻿@page "/"
+
+<div class="container-sm">
+	@*all things*@
+	<div class="row">
+
+		@*most things*@
+		<div class="col-sm-8">
+
+			@*collection name*@
+			<div class="row">
+				<input @bind=GeneratorCollectionName type="text" class="h1" />
+			</div> @*collection name*@
+			
+			@*add new generator*@
+			<div class="row">
+				@*TODO: Select from generators*@
+				<div class="col">
+					<select>
+					</select>
+				</div>
+				<div class="col">
+					<button class="btn btn-primary">CREATE NEW</button>
+				</div>
+			</div>@*add new generator*@
+			
+			@*Generator container*@
+			<div class="row bg-secondary">
+				@foreach (var generator in Data)
+				{
+					<div class="row">
+						<NGT_Object Generator=@generator />
+					</div>
+				}
+			</div>@*Generator container*@
+			
+			@*save/load*@
+			<div class="row">
+				<div class="col">
+					<button class="btn btn-primary btn-lg">SAVE</button>
+				</div>
+				<div class="col">
+					<button class="btn btn-primary btn-lg">LOAD</button>
+				</div>
+			</div>@*save/load*@
+		</div> @*most things*@
+
+		@*sidebar*@
+		<div class="col-sm-4 bg-success">
+			<div class="sticky-top">
+			<div class="row">Output</div>
+			
+			<div class="row">
+				@*TODO: Select from generators*@
+				<select>
+				</select>
+			</div>
+			
+			<div class="row">
+				<button class="btn btn-primary">GENERATE</button>
+			</div>
+
+			@*TODO: Outputs*@
+			</div>
+		</div> @*sidebar*@
+	</div>
+</div>@*all things*@
+
+@code
+{
+	string GeneratorCollectionName = "My Generator";
+	List<NameGenToolkit.NameGenerator> Data = new()
+		{
+			new NameGenToolkit.ConsonantVowel(),
+			new NameGenToolkit.ConsonantVowel(),
+			new NameGenToolkit.ConsonantVowel(),
+			new NameGenToolkit.ConsonantVowel(),
+			new NameGenToolkit.ConsonantVowel(),
+			new NameGenToolkit.ConsonantVowel()
+		};
+
+	void Load()
+	{
+
+	}
+
+	void Save()
+	{
+
+	}
+}
