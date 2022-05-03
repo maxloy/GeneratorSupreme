@@ -1,91 +1,136 @@
 ﻿@page "/"
+@using NGT_Web.NGT
+@inject Blazored.SessionStorage.ISessionStorageService sessionStorage
 
-<div class="container-sm">
-	@*all things*@
-	<div class="row">
-
-		@*most things*@
-		<div class="col-sm-8">
-
-			@*collection name*@
+<div class="container-fluid">
+	<div class=row>
+		@*left side title*@
+		<div class="col-lg-2">
+			<h1 class="display-1 auto-rotate fw-bold" >Generate.ZONE</h1> 
+		</div>
+		@*middle col/meaty part*@
+		<div class="col">
+			@*most things*@
 			<div class="row">
-				<input @bind=GeneratorCollectionName type="text" class="h1" />
-			</div> @*collection name*@
-			
-			@*add new generator*@
-			<div class="row">
-				@*TODO: Select from generators*@
-				<div class="col">
-					<select>
-					</select>
-				</div>
-				<div class="col">
-					<button class="btn btn-primary">CREATE NEW</button>
-				</div>
-			</div>@*add new generator*@
-			
-			@*Generator container*@
-			<div class="row bg-secondary">
-				@foreach (var generator in Data)
-				{
-					<div class="row">
-						<NGT_Object Generator=@generator />
+
+				@*collection name*@
+				<div class="row">
+					<div class="col">
+						<div class="d-inline-flex align-items-center gap-2">
+							<i class="bi bi-pencil"></i>
+							<input @bind=DataManager.GeneratorCollectionName type="text" class="h1 form-control-plaintext" />
+						</div>
 					</div>
-				}
-			</div>@*Generator container*@
-			
+				</div> @*collection name*@
+
+				@*Center columns*@
+				<div class="row gap-3">
+
+					@*Primary generators*@
+					<div class="col-lg-4 p-0 m-0">
+						<GeneratorList DataManager=@DataManager Filter=@DataManager.DoesntUseSubGenerators ID="source_gens" DisplayName="Primaries" />
+					</div> @*Primary generators*@
+
+					@*Secondary generators*@
+					<div class="col-lg-4 p-0 m-0">
+						<GeneratorList DataManager=@DataManager Filter=@DataManager.UsesSubGenerators ID="mod_gens" DisplayName="Combiners" />
+					</div> @*Secondary generators*@
+
+					@*sidebar*@
+					<div class="col-lg-3 p-0 ps-4 pt-3 m-0">
+						<div class="card shadow">
+							<div class="card-header pt-2 mb-2">
+								<div class="row h2 mb-2">Output</div>
+								<div class="row mb-2">
+									<GeneratorPicker DataManager=DataManager @bind-SelectedGUID=DataManager.OutputGeneratorID ID="generator-output-picker"></GeneratorPicker>
+								</div>
+								<div class="row mb-2">
+									<button class="btn btn-primary form-control" @onclick=Generate>Generate</button>
+								</div>
+							</div>
+							<div class="card-body pt-0 scrollable" style="height:46vh">
+								<ul class="list-group">
+									@*TODO: Outputs*@
+									@for (int i = 0; i < 10; i++)
+									{
+										string output = GeneratorOutputs.Count > i ? GeneratorOutputs[i] : "...";
+										<li class="list-group-item">
+											<samp class="user-select-all text-break">
+												@output
+											</samp>
+										</li>
+									}
+								</ul>
+							</div>
+							<div class="card-footer">
+								<div class="d-flex form-check gap-2 justify-content-center">
+									<input type="checkbox" class="form-check-input" @bind=UniqueGeneratorOutputs />
+									<label class="form-check-label">Unique</label>
+								</div>
+							</div>
+						</div>
+					</div> @*sidebar*@
+
+				</div> @*Center columns*@
+			</div>
 			@*save/load*@
 			<div class="row">
 				<div class="col">
-					<button class="btn btn-primary btn-lg">SAVE</button>
+					<button class="btn btn-danger btn-lg">CLEAR<br />all</button>
 				</div>
 				<div class="col">
-					<button class="btn btn-primary btn-lg">LOAD</button>
+					<button class="btn btn-primary btn-lg">SAVE<br />to file</button>
+				</div>
+				<div class="col">
+					<button class="btn btn-primary btn-lg">LOAD<br />from file</button>
 				</div>
 			</div>@*save/load*@
-		</div> @*most things*@
-
-		@*sidebar*@
-		<div class="col-sm-4 bg-success">
-			<div class="sticky-top">
-			<div class="row">Output</div>
-			
-			<div class="row">
-				@*TODO: Select from generators*@
-				<select>
-				</select>
-			</div>
-			
-			<div class="row">
-				<button class="btn btn-primary">GENERATE</button>
-			</div>
-
-			@*TODO: Outputs*@
-			</div>
-		</div> @*sidebar*@
+		</div>
 	</div>
 </div>@*all things*@
 
 @code
 {
-	string GeneratorCollectionName = "My Generator";
-	List<NameGenToolkit.NameGenerator> Data = new()
-		{
-			new NameGenToolkit.ConsonantVowel(),
-			new NameGenToolkit.ConsonantVowel(),
-			new NameGenToolkit.ConsonantVowel(),
-			new NameGenToolkit.ConsonantVowel(),
-			new NameGenToolkit.ConsonantVowel(),
-			new NameGenToolkit.ConsonantVowel()
-		};
+	DataManager DataManager = new();
+	const string SAVE_KEY = "SAVE_DATA";
 
-	void Load()
+	List<string> GeneratorOutputs = new();
+	bool UniqueGeneratorOutputs = true;
+
+	public void Generate()
 	{
+		var generator = GeneratorTracker.Find(DataManager.OutputGeneratorID);
+		if (generator == null)
+		{
+			return;
+		}
 
+		generator.Unique = UniqueGeneratorOutputs;
+		GeneratorOutputs.Clear();
+		for (int i = 0; i < 10; i++)
+		{
+			GeneratorOutputs.Add(generator.Generate(Random.Shared));
+		}
+		generator.Unique = false;
+	}
+
+	protected override async Task OnInitializedAsync()
+	{
+		var cachedData = await sessionStorage.GetItemAsync<string>(SAVE_KEY);
+		if (cachedData != null)
+		{
+			DataManager.Load(cachedData);
+		}
+
+		var timer = new PeriodicTimer(TimeSpan.FromSeconds(1));
+		while (await timer.WaitForNextTickAsync())
+		{
+			Save();
+		}
 	}
 
 	void Save()
 	{
-
+		sessionStorage.SetItemAsync(SAVE_KEY, DataManager.Save());
 	}
 }

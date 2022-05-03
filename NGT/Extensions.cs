@@ -1,8 +1,5 @@
 ﻿//(c) 2018 Fancy Skeleton Games, Inc.
 
-using System.Collections.Generic;
-using System.Linq;
-
 namespace NameGenToolkit
 {
 	//some useful extensions for selecting random elements (something done a fair bit in this plugin)

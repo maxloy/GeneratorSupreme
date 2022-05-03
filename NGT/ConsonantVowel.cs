@@ -1,6 +1,6 @@
 ﻿//(c) 2018 Fancy Skeleton Games, Inc.
 
-using System.Collections.Generic;
+using System.Text.Json;
 
 namespace NameGenToolkit
 {
@@ -16,10 +16,12 @@ namespace NameGenToolkit
 		protected override string GenerateImpl(string defaultVal, System.Random random)
 		{
 			if (MinLength <= 0 || MaxLength <= 0)
+			{
 				return defaultVal;
+			}
 
-			int length = random.Next(MinLength, MaxLength);
-			var array = new char[length];
+			int length = random.Next(Math.Min(MinLength, MaxLength), Math.Max(MinLength, MaxLength));
+			char[]? array = new char[length];
 			for (int i = 0; i < length; i++)
 			{
 				if (i % 2 == 0)
@@ -35,6 +37,18 @@ namespace NameGenToolkit
 			array[0] = char.ToUpper(array[0]);
 
 			return new string(array);
+		}
+
+		protected override void SaveData(Dictionary<string, dynamic> data)
+		{
+			data[nameof(MinLength)] = MinLength;
+			data[nameof(MaxLength)] = MaxLength;
+		}
+
+		protected override void LoadData(Dictionary<string, dynamic> data)
+		{
+			MinLength = JsonSerializer.Deserialize<int>(data[nameof(MinLength)]);
+			MaxLength = JsonSerializer.Deserialize<int>(data[nameof(MaxLength)]);
 		}
 	}
 }

@@ -7,6 +7,7 @@
   "linkerEnabled": false,
   "resources": {
     "assembly": {
+      "Blazored.SessionStorage.dll": "sha256-XkZNIC6OGMeHZDbBGnhfc9yXdLIvGa8LlKDd4ZPWkS8=",
       "Microsoft.AspNetCore.Authorization.dll": "sha256-34F+BnSts\/TON8s8cSZc6roVw6IntMd\/sTrN8WOXiy8=",
       "Microsoft.AspNetCore.Components.dll": "sha256-F+JMphRzIMZdciqr5Yf8CXeTA11n\/doTnAdObTPxNm8=",
       "Microsoft.AspNetCore.Components.Forms.dll": "sha256-WApptBNmFJ1+dCg+jm360NFshcv7dvfzyBGl8rECTt8=",
@@ -196,13 +197,13 @@
       "mscorlib.dll": "sha256-Q4A\/043fz702a7DDbm+JAtMHV3jKAZ9k8khztTMKp2M=",
       "netstandard.dll": "sha256-W9cwgVmBZsddVw3WVFMC5Gya92UufvbVTNR4+u7pnR0=",
       "System.Private.CoreLib.dll": "sha256-KVnZkFos\/ML\/3S2isVijfmFZXO4zEQeCga6BZvGdTbY=",
-      "NGT_Web.dll": "sha256-TSYoj2fs0ZLIn7yfL36IfP7qn\/6IBTfCM72knuz1DCE="
+      "NGT_Web.dll": "sha256-JG8s9DOEnFY4UFJQRRwhyQcMnATjyPovNpjflFWptFM="
     },
     "extensions": null,
     "lazyAssembly": null,
     "libraryInitializers": null,
     "pdb": {
-      "NGT_Web.pdb": "sha256-M6oeyn7zeemtA0b0w8U4rfbrhPFlm5UOqI7vDQVHAu4="
+      "NGT_Web.pdb": "sha256-r9oGj5Xi6njc3WWD+UMMBRWzTZmCy0vEfkYDTIlK0Hg="
     },
     "runtime": {
       "dotnet.6.0.4.inzetbjcf1.js": "sha256-WYno\/cK5MDsl5yi4T\/\/QgUskbBfhLL77i+c0uKzO9+c=",

@@ -62,3 +62,16 @@ a, .btn-link {
     .blazor-error-boundary::after {
         content: "An error has occurred."
     }
+
+.btn-light {
+    border-color: #ced4da;
+}
+
+    .btn-light:hover {
+        border-color: #ced4da;
+    }
+
+.scrollable {
+    overflow-y: auto;
+    overflow-x: hidden;
+}

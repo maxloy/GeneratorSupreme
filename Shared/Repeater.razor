@@ -1,0 +1,32 @@
+﻿<div class="row mb-1">
+	<div class="col-3">
+		<label class="col-form-label">Source</label>
+	</div>
+	<div class="col-9">
+		<GeneratorPicker DataManager=DataManager @bind-SelectedGUID=Generator.Source Exclude=@Generator ID=@("source_picker_" + Generator.GUID.ToString()) />
+	</div>
+</div>
+
+<div class="row mb-1">
+	<div class="d-flex gap-3">
+		<label class="col-form-label">Min</label>
+		<input class="form-control" type="number" step=1 min=1 @bind="Generator.Min" />
+		<label class="col-form-label">Max</label>
+		<input class="form-control" type="number" step=1 min=1 @bind="Generator.Max" />
+	</div>
+</div>
+
+<div class="row">
+	<div class="d-flex gap-3">
+		<label class="col-form-label">Separator</label>
+		<input type="text" class="form-control" @bind=Generator.Separator />
+	</div>
+</div>
+
+@code
+{
+	[Parameter]
+	public DataManager DataManager { get; set; } = null!;
+	[Parameter]
+	public NameGenToolkit.Repeater Generator { get; set; } = null!;
+}

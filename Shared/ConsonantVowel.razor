@@ -1,13 +1,17 @@
 ﻿
-<label>Min</label>
-<input type="number" step=2 @bind="Generator.MinLength" />
-<br />
-<label>Max</label>
-<input type="number" step=2 @bind="Generator.MaxLength" />
-<br />
+<div class="row mb-1">
+	<div class="d-flex gap-3">
+		<label class="col-form-label">Min</label>
+		<input class="form-control" type="number" step=1 @bind="Generator.MinLength" />
+		<label class="col-form-label">Max</label>
+		<input class="form-control" type="number" step=1 @bind="Generator.MaxLength" />
+	</div>
+</div>
 
-@code 
+@code
 {
+	[Parameter]
+	public DataManager DataManager { get; set; } = null!;
 	[Parameter]
 	public NameGenToolkit.ConsonantVowel Generator { get; set; } = null!;
 }

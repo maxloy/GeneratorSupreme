@@ -1,15 +1,76 @@
-﻿<div class="col card bg-light">
-	<h3>@Generator.Name</h3>
+﻿@{
+	DataManager.DataChanged += (obj, args) => StateHasChanged();
+}
 
-	<DynamicComponent Type="@GetComponentForGen()" Parameters="@GetComponentParameters()" />
+<div class="col-flex">
+	<div class="card shadow">
+		<div class="accordion accordion-flush" id=@("accordian_" + ID)>
+			<div class="accordion-item">
+				<button class="accordion-button pb-0 pt-0 m-0 gap-2 accordion-flush generator-accordion" data-bs-toggle="collapse" data-bs-target=@("#accordian_collapse_" + ID)>
+					<div class="d-inline-flex align-items-center gap-2">
+						<img src=@DataManager.GetIcon(Generator.GetType(), true) />
+						<i class="bi bi-pencil"></i>
+						<input class="form-control-plaintext h5" type="text" @bind=@GeneratorName />
+					</div>
+				</button>
+				<div id=@("accordian_collapse_" + ID) class="accordion-collapse collapse show" data-bs-parent=@("#accordian_" +ID)>
+					<div class="accordion-body p-0 m-0">
+						<div class="card-body alert-secondary pb-1 pt-1">
+							<form id=@("watcher_" + ID)>
+								<DynamicComponent Type="@GetComponentForGen()" Parameters="@GetComponentParameters()" />
+							</form>
+						</div>
 
-	<button @onclick=GenerateExample>Example</button>
-	<card><samp>@Example</samp></card>
+						<div class="card-footer">
+							<div class=row>
+								<div class=col-3>
+									<button class="btn btn-primary btn-sm" @onclick=GenerateExample>Example</button>
+								</div>
+								<div class=col>
+									<div class="card flex-fill align-self-center user-select-all"><samp>@Example</samp></div>
+								</div>
+								<div class=col-2>
+									<button type="button" @onclick=TryToDeleteGen class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#modalDanger"><i class="bi bi-trash-fill"></i></button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
+
+
 @code
 {
 	[Parameter]
-	public NameGenToolkit.NameGenerator Generator { get; set; } = null!;
+	public DataManager DataManager { get; set; } = null!;
+	private NameGenToolkit.NameGenerator _generator = null!;
+	[Parameter]
+	public NameGenToolkit.NameGenerator Generator
+	{
+		get { return _generator; }
+		set
+		{
+			if (_generator != value || string.IsNullOrEmpty(Example) || Example == "DFLT")
+			{
+				Example = value.Example();
+			}
+			_generator = value;
+		}
+	}
+	public string GeneratorName
+	{
+		get { return Generator.Name; }
+		set
+		{
+			Generator.Name = value;
+			DataManager.FireDataChanged();
+		}
+	}
+	string ID => Generator.GUID.ToString().Substring(0, 10);
+
 	public string Example = "";
 
 	public void GenerateExample() => Example = Generator.Example();
@@ -24,6 +85,32 @@
 	{
 		Dictionary<string, object> map = new();
 		map["Generator"] = Generator;
+		map["DataManager"] = DataManager;
 		return map;
+	}
+
+	private void TryToDeleteGen()
+	{
+		string header = "Delete " + Generator.Name;
+		string body = "Are you sure you want to delete " + Generator.Name + "? This cannot be undone.";
+		Action callback = () => DataManager.RemoveGenerator(Generator);
+		ModalManager.SetModalData(header, body, callback);
+	}
+
+	[Inject] public IJSRuntime JSRuntime { get; set; } = null!;
+	// call the javascript method to init the select picker
+	protected override async Task OnAfterRenderAsync(bool firstRender)
+	{
+		if (firstRender)
+		{
+			await JSRuntime.InvokeVoidAsync("FormChangeWatcher", DotNetObjectReference.Create(this), "FormChanged", "#watcher_" + ID);
+		}
+	}
+
+	[JSInvokable]
+	public void FormChanged()
+	{
+		GenerateExample();
+		StateHasChanged();
 	}
 }

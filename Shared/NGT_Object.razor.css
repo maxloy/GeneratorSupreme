@@ -1,0 +1,5 @@
+﻿.generator-accordion:not(.collapse)
+{
+    background-color:white;
+    color:black;
+}

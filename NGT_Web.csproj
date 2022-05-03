@@ -7,8 +7,39 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="compilerconfig.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Blazored.SessionStorage" Version="2.2.0" />
+    <PackageReference Include="BuildWebCompiler2022" Version="1.14.7" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="6.0.4" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="6.0.4" PrivateAssets="all" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\Images\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="bootstrap\.github\CODEOWNERS" />
+    <None Include="bootstrap\.github\CONTRIBUTING.md" />
+    <None Include="bootstrap\.github\dependabot.yml" />
+    <None Include="bootstrap\.github\ISSUE_TEMPLATE\bug_report.yml" />
+    <None Include="bootstrap\.github\ISSUE_TEMPLATE\config.yml" />
+    <None Include="bootstrap\.github\ISSUE_TEMPLATE\feature_request.yml" />
+    <None Include="bootstrap\.github\release-drafter.yml" />
+    <None Include="bootstrap\.github\SUPPORT.md" />
+    <None Include="bootstrap\.github\workflows\browserstack.yml" />
+    <None Include="bootstrap\.github\workflows\bundlewatch.yml" />
+    <None Include="bootstrap\.github\workflows\codeql.yml" />
+    <None Include="bootstrap\.github\workflows\css.yml" />
+    <None Include="bootstrap\.github\workflows\docs.yml" />
+    <None Include="bootstrap\.github\workflows\js.yml" />
+    <None Include="bootstrap\.github\workflows\lint.yml" />
+    <None Include="bootstrap\.github\workflows\node-sass.yml" />
+    <None Include="bootstrap\.github\workflows\release-notes.yml" />
+    <None Include="compilerconfig.json" />
   </ItemGroup>
 
 </Project>

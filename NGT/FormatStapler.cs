@@ -1,7 +1,7 @@
 ﻿//(c) 2018 Fancy Skeleton Games, Inc.
 
-using System.Collections.Generic;
-using System.Linq;
+using NGT_Web.NGT;
+using System.Text.Json;
 
 namespace NameGenToolkit
 {
@@ -9,22 +9,37 @@ namespace NameGenToolkit
 	[Description("Combines multiple Name Generators together using a format string (ie. use {0} to insert the result from the first source, {1} for the second, etc)")]
 	public class FormatStapler : NameGenerator
 	{
-		public List<NameGenerator> Sources = new List<NameGenerator>();
+		public List<string> Sources = new();
 		public string FormatString = "{0}";
 
 		protected override string GenerateImpl(string defaultVal, System.Random random)
 		{
-			if (Sources.Count == 0 || Sources.Any(item => item == null))
+			var generators = GeneratorTracker.ResolveList(Sources);
+			if (generators.Count == 0 || generators.Any(item => item == null))
+			{
 				return defaultVal;
+			}
 
 			string[] strings = new string[Sources.Count];
 
 			for (int i = 0; i < Sources.Count; i++)
 			{
-				strings[i] = Sources[i].Generate(defaultVal, random);
+				strings[i] = generators[i].Generate(defaultVal, random);
 			}
 
 			return string.Format(FormatString, strings);
+		}
+
+		protected override void SaveData(Dictionary<string, dynamic> data)
+		{
+			data[nameof(FormatString)] = FormatString;
+			data[nameof(Sources)] = Sources;
+		}
+
+		protected override void LoadData(Dictionary<string, dynamic> data)
+		{
+			FormatString = JsonSerializer.Deserialize<string>(data[nameof(FormatString)]);
+			Sources = JsonSerializer.Deserialize<List<string>>(data[nameof(Sources)]);
 		}
 	}
 }

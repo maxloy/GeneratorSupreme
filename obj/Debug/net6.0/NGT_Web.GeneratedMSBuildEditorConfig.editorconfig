@@ -22,18 +22,6 @@ build_property._RazorSourceGeneratorDebug =
 build_metadata.AdditionalFiles.TargetPath = QXBwLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Projects/NGT_Web/Examples/Counter.razor]
-build_metadata.AdditionalFiles.TargetPath = RXhhbXBsZXNcQ291bnRlci5yYXpvcg==
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Projects/NGT_Web/Examples/FetchData.razor]
-build_metadata.AdditionalFiles.TargetPath = RXhhbXBsZXNcRmV0Y2hEYXRhLnJhem9y
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Projects/NGT_Web/Examples/SurveyPrompt.razor]
-build_metadata.AdditionalFiles.TargetPath = RXhhbXBsZXNcU3VydmV5UHJvbXB0LnJhem9y
-build_metadata.AdditionalFiles.CssScope = 
-
 [C:/Projects/NGT_Web/Pages/Index.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcSW5kZXgucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
@@ -42,22 +30,34 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = U2hhcmVkXENvbnNvbmFudFZvd2VsLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Projects/NGT_Web/Shared/GeneratorList.razor]
+build_metadata.AdditionalFiles.TargetPath = U2hhcmVkXEdlbmVyYXRvckxpc3QucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Projects/NGT_Web/Shared/GeneratorPicker.razor]
+build_metadata.AdditionalFiles.TargetPath = U2hhcmVkXEdlbmVyYXRvclBpY2tlci5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Projects/NGT_Web/Shared/MainLayout.razor]
 build_metadata.AdditionalFiles.TargetPath = U2hhcmVkXE1haW5MYXlvdXQucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Projects/NGT_Web/Shared/NGT_Object.razor]
-build_metadata.AdditionalFiles.TargetPath = U2hhcmVkXE5HVF9PYmplY3QucmF6b3I=
+[C:/Projects/NGT_Web/Shared/ModalDialogue.razor]
+build_metadata.AdditionalFiles.TargetPath = U2hhcmVkXE1vZGFsRGlhbG9ndWUucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Projects/NGT_Web/Shared/RandomInteger.razor]
 build_metadata.AdditionalFiles.TargetPath = U2hhcmVkXFJhbmRvbUludGVnZXIucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Projects/NGT_Web/Shared/Repeater.razor]
+build_metadata.AdditionalFiles.TargetPath = U2hhcmVkXFJlcGVhdGVyLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Projects/NGT_Web/_Imports.razor]
 build_metadata.AdditionalFiles.TargetPath = X0ltcG9ydHMucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Projects/NGT_Web/Examples/NavMenu.razor]
-build_metadata.AdditionalFiles.TargetPath = RXhhbXBsZXNcTmF2TWVudS5yYXpvcg==
-build_metadata.AdditionalFiles.CssScope = b-w00xajv7fq
+[C:/Projects/NGT_Web/Shared/NGT_Object.razor]
+build_metadata.AdditionalFiles.TargetPath = U2hhcmVkXE5HVF9PYmplY3QucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = b-f51o21t595

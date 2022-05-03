@@ -1,0 +1,79 @@
+﻿@{
+	DataManager.DataChanged += (obj, args) => StateHasChanged();
+}
+
+<div class="card shadow">
+	@*add new generator*@
+	<div class="card-header pt-2 alert-success">
+		<h2>@DisplayName</h2>
+		@*TODO: Select from generators*@
+		<div class="row gap-3">
+			<div class="col-8">
+				@{
+					if (string.IsNullOrEmpty(SelectedGeneratorType))
+					{
+						var first = DataManager.ImplementedTypes.FirstOrDefault(item => Filter(item));
+						SelectedGeneratorType = first != null ? first.ToString() : "";
+					}
+				}
+				<select class="selectpicker form-control" @bind=SelectedGeneratorType id=@("picker_" + ID)>
+					@foreach (var type in DataManager.ImplementedTypes)
+					{
+						string content = "<img class=pb-1 src=" + DataManager.GetIcon(type) + " /> " + type.Name;
+						if (Filter(type))
+						{
+							<option value=@type.ToString() data-content=@content>@type.Name</option>
+						}
+					}
+				</select>
+			</div>
+			<div class="col col-flex">
+				<button class="btn btn-primary form-control" @onclick=AddNewGenerator>Create</button>
+			</div>
+		</div>
+	</div>@*add new generator*@
+	@*list generators*@
+	<div class="card-body scrollable pt-0 ps-1 pe-1 pb-0" style="height:60vh">
+		@foreach (var generator in DataManager.Data.Where(item => Filter(item.GetType())))
+		{
+			<div class="row p-2 justify-content-center">
+				<NGT_Object Generator=generator DataManager=DataManager />
+			</div>
+		}
+	</div>
+</div>
+
+@code {
+	[Parameter] public string DisplayName { get; set; } = "Display Name";
+	[Parameter] public DataManager DataManager { get; set; } = null!;
+	[Parameter] public Predicate<Type> Filter { get; set; } = v => true;
+	[Parameter] public string ID { get; set; } = "";
+
+	private string SelectedGeneratorType = "";
+
+	private void AddNewGenerator()
+	{
+		var type = Type.GetType(SelectedGeneratorType);
+		if (type != null)
+		{
+			DataManager.AddNewGenerator(type);
+		}
+	}
+
+	// inject jsruntime to call javascript code
+	[Inject] public IJSRuntime JSRuntime { get; set; } = null!;
+
+	// call the javascript method to init the select picker
+	protected override async Task OnAfterRenderAsync(bool firstRender)
+	{
+		await JSRuntime.InvokeVoidAsync("InitSelectPicker", DotNetObjectReference.Create(this), "OnSelectedValue", "#picker_" + ID);
+	}
+
+	// method which will be triggered by javascript, need to pass the method name
+	[JSInvokable]
+	public void OnSelectedValue(string val)
+	{
+		SelectedGeneratorType = val;
+		StateHasChanged();
+	}
+}

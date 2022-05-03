@@ -1,0 +1,60 @@
+﻿@{
+	DataManager.DataChanged += (obj, args) => StateHasChanged();
+}
+
+<select class="selectpicker form-control" @onchange=UpdateGUID id=@(ID)>
+	@foreach (var generator in DataManager.Data.Where(item => item != Exclude))
+	{
+		string imgRef = "<img class=pb-1 src=" + DataManager.GetIcon(generator.GetType()) + " /> " + generator.Name;
+		if (string.IsNullOrEmpty(SelectedGUID) || DataManager.Data.Any(item => item.GUID.ToString() == SelectedGUID) == false)
+		{
+			<option selected value=@generator.GUID.ToString() data-content=@imgRef></option>
+			SelectedGUID = generator.GUID.ToString();
+			SelectedGUIDChanged.InvokeAsync(SelectedGUID);
+		}
+		else
+		{
+			<option value=@generator.GUID.ToString() data-content=@imgRef></option>
+		}
+	}
+</select>
+@code
+{
+	[Parameter]
+	public string ID { get; set; } = "";
+
+	[Parameter]
+	public DataManager DataManager { get; set; } = null!;
+
+	[Parameter]
+	public string SelectedGUID { get; set; } = "";
+
+	[Parameter]
+	public NameGenToolkit.NameGenerator Exclude { get; set; } = null!;
+
+	[Parameter]
+	public EventCallback<string> SelectedGUIDChanged { get; set; }
+
+	private async Task UpdateGUID(ChangeEventArgs args)
+	{
+		SelectedGUID = args.Value?.ToString()!;
+		await SelectedGUIDChanged.InvokeAsync(SelectedGUID);
+	}
+
+	// inject jsruntime to call javascript code
+	[Inject] public IJSRuntime JSRuntime { get; set; } = null!;
+
+	// call the javascript method to init the select picker
+	protected override async Task OnAfterRenderAsync(bool firstRender)
+	{
+		await JSRuntime.InvokeVoidAsync("InitSelectPicker", DotNetObjectReference.Create(this), "OnSelectedValue", "#" + ID);
+	}
+
+	// method which will be triggered by javascript, need to pass the method name
+	[JSInvokable]
+	public void OnSelectedValue(string val)
+	{
+		SelectedGUID = val;
+		StateHasChanged();
+	}
+}
