@@ -5,7 +5,6 @@ using System.Text.Json;
 
 namespace NameGenToolkit
 {
-	//[CreateAssetMenu(menuName = MenuFolder + "/Format Stapler")]
 	[Description("Combines multiple Name Generators together using a format string (ie. use {0} to insert the result from the first source, {1} for the second, etc)")]
 	public class FormatStapler : NameGenerator
 	{
@@ -27,7 +26,14 @@ namespace NameGenToolkit
 				strings[i] = generators[i].Generate(defaultVal, random);
 			}
 
-			return string.Format(FormatString, strings);
+			try
+			{
+				return string.Format(FormatString, strings);
+			}
+			catch
+			{
+				return defaultVal;
+			}
 		}
 
 		protected override void SaveData(Dictionary<string, dynamic> data)
