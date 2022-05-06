@@ -25,6 +25,7 @@ namespace NGT_Web.Shared
 			typeof(NameGenToolkit.StringList),
 			typeof(NameGenToolkit.Stapler),
 			typeof(NameGenToolkit.FormatStapler),
+			typeof(NameGenToolkit.RandomSelector),
 		};
 
 		List<Type> SubgenTypes = new()
