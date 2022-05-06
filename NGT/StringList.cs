@@ -7,22 +7,22 @@ namespace NameGenToolkit
 	[Description("Picks a string at random from the supplied list.")]
 	public class StringList : NameGenerator
 	{
-		public string[] Strings = null!;
+		public string RawValue = "";
 		public bool SplitOnNewline = true;
 		public bool SplitOnComma = true;
-		public bool SplitOnSpace = false;
+		public bool SplitOnSpace = true;
 
 		protected override string GenerateImpl(string defaultVal, System.Random random)
 		{
-			if (Strings == null || Strings.Length <= 0)
+			if (string.IsNullOrEmpty(RawValue))
 			{
 				return defaultVal;
 			}
 
-			return Strings.RandomElement(random);
+			return SplitText(RawValue).RandomElement(random);
 		}
 
-		public void SetStringFromText(string text)
+		private string[] SplitText(string text)
 		{
 			List<char> splits = new();
 			if (SplitOnNewline)
@@ -39,16 +39,12 @@ namespace NameGenToolkit
 				splits.Add(' ');
 			}
 
-			Strings = text.Split(splits.ToArray());
+			return text.Split(splits.ToArray());
 		}
 
 		protected override void SaveData(Dictionary<string, dynamic> data)
 		{
-			if (Strings != null && Strings.Length > 0)
-			{
-				data[nameof(Strings)] = Strings;
-			}
-
+			data[nameof(RawValue)] = RawValue;
 			data[nameof(SplitOnNewline)] = SplitOnNewline;
 			data[nameof(SplitOnComma)] = SplitOnComma;
 			data[nameof(SplitOnSpace)] = SplitOnSpace;
@@ -56,11 +52,7 @@ namespace NameGenToolkit
 
 		protected override void LoadData(Dictionary<string, dynamic> data)
 		{
-			if (data.Keys.Contains(nameof(Strings)))
-			{
-				Strings = JsonSerializer.Deserialize<string[]>(data[nameof(Strings)]);
-			}
-
+			RawValue = JsonSerializer.Deserialize(data[nameof(RawValue)]);
 			SplitOnNewline = JsonSerializer.Deserialize<bool>(data[nameof(SplitOnNewline)]);
 			SplitOnComma = JsonSerializer.Deserialize<bool>(data[nameof(SplitOnComma)]);
 			SplitOnSpace = JsonSerializer.Deserialize<bool>(data[nameof(SplitOnSpace)]);
