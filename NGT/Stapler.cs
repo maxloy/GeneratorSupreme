@@ -1,5 +1,6 @@
 ﻿//(c) 2018 Fancy Skeleton Games, Inc.
 
+using NGT_Web.NGT;
 using System.Text.Json;
 
 namespace NameGenToolkit
@@ -7,21 +8,31 @@ namespace NameGenToolkit
 	[Description("Joins two or more generators together using a supplied separator string")]
 	public class Stapler : NameGenerator
 	{
-		public List<NameGenerator> Sources = new();
+		public List<string> Sources = new();
 		public string Separator = " ";
 
 		protected override string GenerateImpl(string defaultVal, System.Random random)
 		{
-			if (Sources.Count == 0 || Sources.Any(item => item == null))
+			if (Sources.Count == 0)
+			{
+				return defaultVal;
+			}
+			foreach(var source in Sources)
+			{
+				Console.WriteLine(source);
+			}
+
+			List<NameGenerator>? generators = GeneratorTracker.ResolveList(Sources);
+			if (generators.Count == 0)
 			{
 				return defaultVal;
 			}
 
-			string? finalName = Sources[0].Generate(defaultVal, random);
+			string? finalName = generators[0].Generate(defaultVal, random);
 
 			for (int i = 1; i < Sources.Count; i++)
 			{
-				finalName += Separator + Sources[i].Generate(defaultVal, random);
+				finalName += Separator + generators[i].Generate(defaultVal, random);
 			}
 
 			return finalName;
@@ -30,13 +41,13 @@ namespace NameGenToolkit
 		protected override void SaveData(Dictionary<string, dynamic> data)
 		{
 			data[nameof(Separator)] = Separator;
-			throw new NotImplementedException();
+			data[nameof(Sources)] = Sources;
 		}
 
 		protected override void LoadData(Dictionary<string, dynamic> data)
 		{
 			Separator = JsonSerializer.Deserialize<string>(data[nameof(Separator)]);
-			throw new NotImplementedException();
+			Sources = JsonSerializer.Deserialize<List<string>>(data[nameof(Sources)]);
 		}
 	}
 }

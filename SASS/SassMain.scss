@@ -1,14 +1,8 @@
 ﻿@import "../bootstrap/scss/bootstrap.scss";
 
-.auto-rotate {
-    //writing-mode: inherit;
-}
-
 @include media-breakpoint-up(lg) {
     .auto-rotate {
         writing-mode: vertical-rl;
         transform:rotate(180deg);
-       // transform:scale(1.3);
-        //transform: rotateX(180);
     }
 }

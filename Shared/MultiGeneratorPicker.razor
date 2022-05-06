@@ -1,0 +1,70 @@
+﻿
+<div class="card mb-2">
+	<div class="card-header h5">
+		Sources
+	</div>
+	<div class="card-body p-2">
+		@for (int i = 0; i < PickedGUIDS.Count; i++)
+		{
+			int index = i; //note: gotta bind locally to this context or it won't work //I hate that this works
+			<div class="input-group d-flex align-middle">
+				<span class=input-group-text>@index</span>
+
+				<GeneratorPicker DataManager=DataManager Exclude=Exclude ID=@(ID + "_multi_" + index) SelectedGUID=@PickedGUIDS[index] SelectedGUIDChanged=@((e) => ChangeGUIDAt(index, e)) />
+
+				<button class="btn btn-outline-danger btn-sm h-auto" type="button" @onclick=@(() => RemoveAt(index))>-</button>
+
+			</div>
+		}
+	</div>
+
+	<div class="d-flex gap-3 p-2">
+		@*picker*@
+		<GeneratorPicker DataManager=DataManager Exclude=Exclude @bind-SelectedGUID=SelectedAddGUID ID=@(ID + "_multi_add_picker") />
+		@*add*@
+		<button class="btn btn-success" type="button" @onclick=Add>Add</button>
+	</div>
+</div>
+
+@code {
+	[Parameter]
+	public DataManager DataManager { get; set; } = null!;
+
+	[Parameter]
+	public List<string> PickedGUIDS { get; set; } = new();
+	[Parameter]
+	public EventCallback<List<string>> PickedGUIDSChanged { get; set; }
+
+	[Parameter]
+	public NameGenToolkit.NameGenerator Exclude { get; set; } = null!;
+
+	[Parameter]
+	public string ID { get; set; } = "";
+
+	string SelectedAddGUID = "";
+
+	void UpdatePickedGUIDS()
+	{
+		PickedGUIDSChanged.InvokeAsync(PickedGUIDS);
+	}
+
+	void ChangeGUIDAt(int index, string value)
+	{
+		PickedGUIDS[index] = value;
+		UpdatePickedGUIDS();
+	}
+
+	void RemoveAt(int index)
+	{
+		PickedGUIDS.RemoveAt(index);
+		StateHasChanged();
+		UpdatePickedGUIDS();
+	}
+
+	void Add()
+	{
+		Console.WriteLine("adding " + SelectedAddGUID);
+		PickedGUIDS.Add(SelectedAddGUID);
+		UpdatePickedGUIDS();
+	}
+}

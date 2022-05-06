@@ -1,0 +1,16 @@
+﻿<MultiGeneratorPicker DataManager=DataManager Exclude=Generator ID=@("stapler_multi_" + Generator.GUID.ToString()) @bind-PickedGUIDS=Generator.Sources />
+
+<div class="row">
+	<div class="d-flex gap-3">
+		<label class="col-form-label">Separator</label>
+		<input type="text" class="form-control" @bind=Generator.Separator />
+	</div>
+</div>
+
+
+@code {
+	[Parameter]
+	public DataManager DataManager {get; set;} = null!;
+	[Parameter]
+	public NameGenToolkit.Stapler Generator {get; set;} = null!;
+}

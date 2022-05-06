@@ -22,6 +22,8 @@ namespace NGT_Web.Shared
 			typeof(NameGenToolkit.ConsonantVowel),
 			typeof(NameGenToolkit.RandomInteger),
 			typeof(NameGenToolkit.Repeater),
+			typeof(NameGenToolkit.StringList),
+			typeof(NameGenToolkit.Stapler),
 		};
 
 		List<Type> SubgenTypes = new()
