@@ -4,11 +4,9 @@
 
 <select class="selectpicker form-control" @onchange=UpdateGUID id=@ID>
 	@{
-		Console.WriteLine("on " + ID);
 		var list = DataManager.Data.Where(item => item != Exclude).ToList();
 		if(list.Count == 0 && !string.IsNullOrEmpty(SelectedGUID))
 		{
-			Console.WriteLine("clearing guid from " + SelectedGUID);
 			SelectedGUID = "";
 			SelectedGUIDChanged.InvokeAsync(SelectedGUID);
 		}
@@ -16,7 +14,6 @@
 	@for (int i = 0; i < list.Count; i++)
 	{
 		var generator = list[i];
-		Console.WriteLine(i + " " + generator.GUID.ToString());
 		string content = "<img class=pb-1 src=" + DataManager.GetIcon(generator.GetType()) + " /> " + generator.Name;
 		bool selected = false;
 		//add the selected keyword if this is guid is the currently selected one
@@ -29,7 +26,6 @@
 		{
 			selected = true;
 			//because this is selecting an option that is not the currently selected GUID, we need to update the selected guid and fire the changed event
-			Console.WriteLine("Changing GUID from " + SelectedGUID + " to " + generator.GUID.ToString());
 			SelectedGUID = generator.GUID.ToString();
 			SelectedGUIDChanged.InvokeAsync(SelectedGUID);
 		}
