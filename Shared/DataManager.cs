@@ -95,6 +95,16 @@ namespace NGT_Web.Shared
 			DataChanged.Invoke(this, EventArgs.Empty);
 		}
 
+		public void ClearAll()
+		{
+			foreach(var gen in Data)
+			{
+				GeneratorTracker.Deregister(gen);
+			}
+			Data.Clear();
+			DataChanged.Invoke(this, EventArgs.Empty);
+		}
+
 		public void FireDataChanged()
 		{
 			DataChanged.Invoke(this, EventArgs.Empty);

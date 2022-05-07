@@ -6,7 +6,7 @@
 	<div class=row>
 		@*left side title*@
 		<div class="col-lg-2">
-			<h1 class="display-1 auto-rotate fw-bold" >Generate.ZONE</h1> 
+			<h1 class="display-1 auto-rotate fw-bold">Generate.ZONE</h1> 
 		</div>
 		@*middle col/meaty part*@
 		<div class="col">
@@ -76,7 +76,7 @@
 			@*save/load*@
 			<div class="row">
 				<div class="col">
-					<button class="btn btn-danger btn-lg">CLEAR<br />all</button>
+					<button class="btn btn-danger btn-lg" @onclick=PromptClearAll data-bs-toggle="modal" data-bs-target="#modalDanger">CLEAR<br />all</button>
 				</div>
 				<div class="col">
 					<button class="btn btn-primary btn-lg">SAVE<br />to file</button>
@@ -132,5 +132,13 @@
 	void Save()
 	{
 		sessionStorage.SetItemAsync(SAVE_KEY, DataManager.Save());
+	}
+
+	void PromptClearAll()
+	{
+		string header = "Clear all";
+		string body = "Are you sure you want to delete everything? This cannot be undone.";
+		Action callback = DataManager.ClearAll;
+		ModalManager.SetModalData(header, body, callback);
 	}
 }
