@@ -44,7 +44,11 @@ namespace NameGenToolkit
 
 		protected override void SaveData(Dictionary<string, dynamic> data)
 		{
-			data[nameof(RawValue)] = RawValue;
+			if (!string.IsNullOrEmpty(RawValue))
+			{
+				data[nameof(RawValue)] = RawValue;
+			}
+
 			data[nameof(SplitOnNewline)] = SplitOnNewline;
 			data[nameof(SplitOnComma)] = SplitOnComma;
 			data[nameof(SplitOnSpace)] = SplitOnSpace;
@@ -52,7 +56,11 @@ namespace NameGenToolkit
 
 		protected override void LoadData(Dictionary<string, dynamic> data)
 		{
-			RawValue = JsonSerializer.Deserialize(data[nameof(RawValue)]);
+			if (data.ContainsKey(nameof(RawValue)))
+{
+				RawValue = JsonSerializer.Deserialize(data[nameof(RawValue)]);
+			}
+
 			SplitOnNewline = JsonSerializer.Deserialize<bool>(data[nameof(SplitOnNewline)]);
 			SplitOnComma = JsonSerializer.Deserialize<bool>(data[nameof(SplitOnComma)]);
 			SplitOnSpace = JsonSerializer.Deserialize<bool>(data[nameof(SplitOnSpace)]);
