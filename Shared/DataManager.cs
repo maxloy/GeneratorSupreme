@@ -9,8 +9,8 @@ namespace NGT_Web.Shared
 		public List<NameGenToolkit.NameGenerator> Data = new();
 
 		public string OutputGeneratorID = "";
+		
 		public event EventHandler DataChanged = (obj, args) => { };
-
 
 		public DataManager()
 		{
@@ -40,19 +40,19 @@ namespace NGT_Web.Shared
 
 		Dictionary<Type, string> GeneratorIcons = new()
 		{
-			{ typeof(NameGenToolkit.FormatStapler), "formatstapler_icon"},
+			{ typeof(NameGenToolkit.FormatStapler), "formatstapler_icon" },
 			{ typeof(NameGenToolkit.Repeater), "repeater_icon" },
 			{ typeof(NameGenToolkit.RandomSelector), "randomselector_icon" },
 			{ typeof(NameGenToolkit.WeightedRandomSelector), "randomselector_icon" },
-			{ typeof(NameGenToolkit.Stapler), "stapler_icon"},
+			{ typeof(NameGenToolkit.Stapler), "stapler_icon" },
 			{ typeof(NameGenToolkit.ConsonantVowel), "consonantvowel_icon" },
-			{ typeof(NameGenToolkit.RandomInteger), "numbergen_icon"},
-			{ typeof(NameGenToolkit.StringList), "stringlist_icon"},
+			{ typeof(NameGenToolkit.RandomInteger), "numbergen_icon" },
+			{ typeof(NameGenToolkit.StringList), "stringlist_icon" },
 		};
 
 		public string GetIcon(Type genType, bool large = false)
 		{
-			if(GeneratorIcons.TryGetValue(genType, out string? icon))
+			if (GeneratorIcons.TryGetValue(genType, out string? icon))
 			{
 				return "Images/" + icon + (large ? "_2" : "") + ".png";
 			}
@@ -97,7 +97,7 @@ namespace NGT_Web.Shared
 
 		public void ClearAll()
 		{
-			foreach(var gen in Data)
+			foreach (NameGenToolkit.NameGenerator? gen in Data)
 			{
 				GeneratorTracker.Deregister(gen);
 			}
@@ -157,7 +157,7 @@ namespace NGT_Web.Shared
 		public string Save()
 		{
 			Dictionary<string, dynamic> data = new();
-			
+
 			data[nameof(GeneratorCollectionName)] = GeneratorCollectionName;
 			data[nameof(OutputGeneratorID)] = OutputGeneratorID;
 

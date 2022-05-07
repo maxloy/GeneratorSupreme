@@ -1,5 +1,4 @@
 ﻿@page "/"
-@using NGT_Web.NGT
 @inject Blazored.SessionStorage.ISessionStorageService sessionStorage
 
 <div class="container-fluid">
@@ -38,37 +37,7 @@
 
 					@*sidebar*@
 					<div class="col-lg-3 p-0 ps-4 pt-3 m-0">
-						<div class="card shadow">
-							<div class="card-header pt-2 mb-2">
-								<div class="row h2 mb-2">Output</div>
-								<div class="row mb-2">
-									<GeneratorPicker DataManager=DataManager @bind-SelectedGUID=DataManager.OutputGeneratorID ID="generator-output-picker"></GeneratorPicker>
-								</div>
-								<div class="row mb-2">
-									<button class="btn btn-primary form-control" @onclick=Generate>Generate</button>
-								</div>
-							</div>
-							<div class="card-body pt-0 scrollable" style="height:46vh">
-								<ul class="list-group">
-									@*TODO: Outputs*@
-									@for (int i = 0; i < 10; i++)
-									{
-										string output = GeneratorOutputs.Count > i ? GeneratorOutputs[i] : "...";
-										<li class="list-group-item">
-											<samp class="user-select-all text-break">
-												@output
-											</samp>
-										</li>
-									}
-								</ul>
-							</div>
-							<div class="card-footer">
-								<div class="d-flex form-check gap-2 justify-content-center">
-									<input type="checkbox" class="form-check-input" @bind=UniqueGeneratorOutputs />
-									<label class="form-check-label">Unique</label>
-								</div>
-							</div>
-						</div>
+						<GeneratorOutput DataManager=@DataManager />
 					</div> @*sidebar*@
 
 				</div> @*Center columns*@
@@ -93,26 +62,6 @@
 {
 	DataManager DataManager = new();
 	const string SAVE_KEY = "SAVE_DATA";
-
-	List<string> GeneratorOutputs = new();
-	bool UniqueGeneratorOutputs = true;
-
-	public void Generate()
-	{
-		var generator = GeneratorTracker.Find(DataManager.OutputGeneratorID);
-		if (generator == null)
-		{
-			return;
-		}
-
-		generator.Unique = UniqueGeneratorOutputs;
-		GeneratorOutputs.Clear();
-		for (int i = 0; i < 10; i++)
-		{
-			GeneratorOutputs.Add(generator.Generate(Random.Shared));
-		}
-		generator.Unique = false;
-	}
 
 	protected override async Task OnInitializedAsync()
 	{
