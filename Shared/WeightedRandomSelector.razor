@@ -1,0 +1,15 @@
+﻿<MultiGeneratorPicker 
+	DataManager=DataManager 
+	Exclude=Generator 
+	ID=@("multi_" + Generator.GUID.ToString()) 
+	@bind-PickedGUIDS=Generator.Sources
+	ShowWeightBox=true
+	@bind-Weights=Generator.Weights
+/>
+
+@code {
+	[Parameter]
+	public DataManager DataManager {get; set;} = null!;
+	[Parameter]
+	public NameGenToolkit.WeightedRandomSelector Generator {get; set;} = null!;
+}

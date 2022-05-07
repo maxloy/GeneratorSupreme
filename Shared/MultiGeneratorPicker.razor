@@ -8,12 +8,32 @@
 		{
 			int index = i; //note: gotta bind locally to this context or it won't work //I hate that this works
 			<div class="input-group d-flex align-middle">
-				<span class=input-group-text>@index</span>
+				<span class="input-group-text">@index</span>
 
-				<GeneratorPicker DataManager=DataManager Exclude=Exclude ID=@(ID + "_multi_" + index) SelectedGUID=@PickedGUIDS[index] SelectedGUIDChanged=@((e) => ChangeGUIDAt(index, e)) />
+				<span class="w-75">
+					<GeneratorPicker DataManager=DataManager
+								 Exclude=Exclude
+								 ID=@(ID + "_multi_" + index)
+								 SelectedGUID=@PickedGUIDS[index]
+								 SelectedGUIDChanged=@((e) => ChangeGUIDAt(index, e)) />
+				</span>
+
+				@if (ShowWeightBox)
+				{
+					<input type="number"
+					   class="form-control"
+					   value=@(Weights[i])
+					   step=1.0000000
+					   @onchange=@((e) =>
+					   {
+						   if(e.Value != null && float.TryParse(e.Value.ToString(), out float val))
+						   {
+						   ChangeWeightAt(index,val);
+						   }
+						}) />
+				}
 
 				<button class="btn btn-outline-danger btn-sm h-auto" type="button" @onclick=@(() => RemoveAt(index))>-</button>
-
 			</div>
 		}
 	</div>
@@ -39,6 +59,14 @@
 	public NameGenToolkit.NameGenerator Exclude { get; set; } = null!;
 
 	[Parameter]
+	public bool ShowWeightBox { get; set; } = false;
+
+	[Parameter]
+	public List<float> Weights { get; set; } = new();
+	[Parameter]
+	public EventCallback<List<float>> WeightsChanged { get; set; }
+
+	[Parameter]
 	public string ID { get; set; } = "";
 
 	string SelectedAddGUID = "";
@@ -46,6 +74,7 @@
 	void UpdatePickedGUIDS()
 	{
 		PickedGUIDSChanged.InvokeAsync(PickedGUIDS);
+		WeightsChanged.InvokeAsync(Weights);
 	}
 
 	void ChangeGUIDAt(int index, string value)
@@ -54,9 +83,16 @@
 		UpdatePickedGUIDS();
 	}
 
+	void ChangeWeightAt(int index, float value)
+	{
+		Weights[index] = value;
+		UpdatePickedGUIDS();
+	}
+
 	void RemoveAt(int index)
 	{
 		PickedGUIDS.RemoveAt(index);
+		Weights.RemoveAt(index);
 		StateHasChanged();
 		UpdatePickedGUIDS();
 	}
@@ -64,6 +100,8 @@
 	void Add()
 	{
 		PickedGUIDS.Add(SelectedAddGUID);
+		Weights.Add(1);
+		StateHasChanged();
 		UpdatePickedGUIDS();
 	}
 }

@@ -26,6 +26,7 @@ namespace NGT_Web.Shared
 			typeof(NameGenToolkit.Stapler),
 			typeof(NameGenToolkit.FormatStapler),
 			typeof(NameGenToolkit.RandomSelector),
+			typeof(NameGenToolkit.WeightedRandomSelector),
 		};
 
 		List<Type> SubgenTypes = new()
@@ -42,7 +43,7 @@ namespace NGT_Web.Shared
 			{ typeof(NameGenToolkit.FormatStapler), "formatstapler_icon"},
 			{ typeof(NameGenToolkit.Repeater), "repeater_icon" },
 			{ typeof(NameGenToolkit.RandomSelector), "randomselector_icon" },
-			{ typeof(NameGenToolkit.WeightedRandomSelector), "weightedrandomselector_icon" },
+			{ typeof(NameGenToolkit.WeightedRandomSelector), "randomselector_icon" },
 			{ typeof(NameGenToolkit.Stapler), "stapler_icon"},
 			{ typeof(NameGenToolkit.ConsonantVowel), "consonantvowel_icon" },
 			{ typeof(NameGenToolkit.RandomInteger), "numbergen_icon"},

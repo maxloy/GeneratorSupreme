@@ -1,35 +1,48 @@
-﻿namespace NameGenToolkit
+﻿using NGT_Web.NGT;
+using System.Text.Json;
+
+namespace NameGenToolkit
 {
 	[Description("Similar to the Random Selector, but each source module is assigned a weight so that some can be chosen more often than others. The weight values are relative to each other, not to an arbitrary total.")]
 	public class WeightedRandomSelector : NameGenerator
 	{
-		[System.Serializable]
-		public class WeightedSource
-		{
-			public NameGenerator Source = null!;
-			public float Weight;
-		}
 
-		public List<WeightedSource> Sources = new();
+		public List<string> Sources = new();
+		public List<float> Weights = new();
 
 		protected override string GenerateImpl(string defaultVal, System.Random random)
 		{
-			if (Sources.Count <= 0 || Sources.Any(item => item == null || item.Source == null))
+			if (Sources.Count == 0)
 			{
 				return defaultVal;
 			}
 
-			float totalWeight = Sources.Sum(item => item.Weight);
-
-			double rnd = random.NextDouble() * totalWeight;
-
-			foreach (WeightedSource? source in Sources)
+			List<NameGenerator>? generators = GeneratorTracker.ResolveList(Sources);
+			if (generators.Count == 0)
 			{
-				rnd -= source.Weight;
-				if (rnd <= 0)
+				return defaultVal;
+			}
+
+			double totalWeight = Weights.Sum();
+
+			try
+			{
+				double rnd = random.NextDouble() * totalWeight;
+
+				for (int i = 0; i < generators.Count; i++)
 				{
-					return source.Source.Generate(defaultVal, random);
+					NameGenerator? generator = generators[i];
+					float weight = Weights[i];
+					rnd -= weight;
+					if(rnd < 0)
+					{
+						return generator.Generate(defaultVal, random);
+					}
 				}
+			}
+			catch
+			{
+				return defaultVal;
 			}
 
 			return defaultVal;
@@ -37,12 +50,14 @@
 
 		protected override void SaveData(Dictionary<string, dynamic> data)
 		{
-			throw new NotImplementedException();
+			data[nameof(Sources)] = Sources;
+			data[nameof(Weights)] = Weights;
 		}
 
 		protected override void LoadData(Dictionary<string, dynamic> data)
 		{
-			throw new NotImplementedException();
+			Sources = JsonSerializer.Deserialize<List<string>>(data[nameof(Sources)]);
+			Weights = JsonSerializer.Deserialize<List<float>>(data[nameof(Weights)]);
 		}
 	}
 
