@@ -112,10 +112,10 @@ namespace NGT_Web.Shared
 
 		public void Load(string json)
 		{
-			List<NameGenToolkit.NameGenerator> newData = new();
-
 			try
 			{
+				ClearAll();
+
 				Dictionary<string, dynamic> data = JsonSerializer.Deserialize<Dictionary<string, dynamic>>(json)!;
 				if (data == null)
 				{
@@ -136,7 +136,7 @@ namespace NGT_Web.Shared
 							if (Activator.CreateInstance(type) is NameGenToolkit.NameGenerator generator)
 							{
 								generator.Load(item);
-								newData.Add(generator);
+								Data.Add(generator);
 							}
 							else
 							{
@@ -150,21 +150,10 @@ namespace NGT_Web.Shared
 					}
 				}
 
-				foreach (NameGenToolkit.NameGenerator? gen in Data)
-				{
-					GeneratorTracker.Deregister(gen);
-				}
-				Data.Clear();
-				Data = newData;
-
 				FireDataChanged();
 			}
 			catch (Exception e)
 			{
-				foreach(var gen in newData)
-				{
-					GeneratorTracker.Deregister(gen);
-				}
 
 				Console.WriteLine(e.Message);
 				//show error dialog
