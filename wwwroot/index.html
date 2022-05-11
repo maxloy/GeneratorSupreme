@@ -58,6 +58,38 @@
             });
         }
 
+        showBootstrapModal = (targetId) => {
+            console.log(targetId);
+            $(targetId).modal('show');
+        }
+
+        async function downloadFile(fileName, fileData) {
+            const blob = new Blob([fileData], { type: 'text/plain' });
+
+            const savePickerOpts = {
+                suggestedName: fileName
+            }
+            const saveHandle = await window.showSaveFilePicker(savePickerOpts);
+
+            const writable = await saveHandle.createWritable();
+            await writable.write(blob);
+            await writable.close();
+        }
+
+        async function loadLocalFile() {
+            try {
+                [filehandle] = await window.showOpenFilePicker();
+                const filedata = await filehandle.getFile();
+                const text = await filedata.text();
+                return text;
+            }
+            catch (error)
+            {
+                console.log("error");
+                return "";
+            }
+        }
+
     </script>
 </body>
 

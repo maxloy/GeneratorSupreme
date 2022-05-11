@@ -9,7 +9,7 @@ namespace NGT_Web.Shared
 		public List<NameGenToolkit.NameGenerator> Data = new();
 
 		public string OutputGeneratorID = "";
-		
+
 		public event EventHandler DataChanged = (obj, args) => { };
 
 		public DataManager()
@@ -112,46 +112,64 @@ namespace NGT_Web.Shared
 
 		public void Load(string json)
 		{
-			Dictionary<string, dynamic> data = JsonSerializer.Deserialize<Dictionary<string, dynamic>>(json)!;
+			List<NameGenToolkit.NameGenerator> newData = new();
 
-			if (data == null)
+			try
 			{
-				//show error dialogue?
-
-			}
-			else
-			{
-				Data.Clear();
-
-				GeneratorCollectionName = JsonSerializer.Deserialize<string>(data[nameof(GeneratorCollectionName)]);
-				OutputGeneratorID = JsonSerializer.Deserialize<string>(data[nameof(OutputGeneratorID)]);
-				Console.WriteLine(OutputGeneratorID);
-
-				List<Dictionary<string, dynamic>> generatorData = JsonSerializer.Deserialize<List<Dictionary<string, dynamic>>>(data["data"]);
-				foreach (Dictionary<string, dynamic> item in generatorData)
+				Dictionary<string, dynamic> data = JsonSerializer.Deserialize<Dictionary<string, dynamic>>(json)!;
+				if (data == null)
 				{
-					string typename = JsonSerializer.Deserialize<string>(item["type"]);
-					Type? type = Type.GetType(typename);
-					if (type != null)
+					throw new Exception("data is not json");
+				}
+				else
+				{
+					GeneratorCollectionName = JsonSerializer.Deserialize<string>(data[nameof(GeneratorCollectionName)]);
+					OutputGeneratorID = JsonSerializer.Deserialize<string>(data[nameof(OutputGeneratorID)]);
+
+					List<Dictionary<string, dynamic>> generatorData = JsonSerializer.Deserialize<List<Dictionary<string, dynamic>>>(data["data"]);
+					foreach (Dictionary<string, dynamic> item in generatorData)
 					{
-						if (Activator.CreateInstance(type) is NameGenToolkit.NameGenerator generator)
+						string typename = JsonSerializer.Deserialize<string>(item["type"]);
+						Type? type = Type.GetType(typename);
+						if (type != null)
 						{
-							generator.Load(item);
-							Data.Add(generator);
+							if (Activator.CreateInstance(type) is NameGenToolkit.NameGenerator generator)
+							{
+								generator.Load(item);
+								newData.Add(generator);
+							}
+							else
+							{
+								throw new Exception("couldn't create generator type");
+							}
 						}
 						else
 						{
-							//error
+							throw new Exception("couldn't load generator type");
 						}
 					}
-					else
-					{
-						//error
-					}
 				}
+
+				foreach (NameGenToolkit.NameGenerator? gen in Data)
+				{
+					GeneratorTracker.Deregister(gen);
+				}
+				Data.Clear();
+				Data = newData;
+
+				FireDataChanged();
+			}
+			catch (Exception e)
+			{
+				foreach(var gen in newData)
+				{
+					GeneratorTracker.Deregister(gen);
+				}
+
+				Console.WriteLine(e.Message);
+				//show error dialog
 			}
 
-			FireDataChanged();
 		}
 
 		public string Save()

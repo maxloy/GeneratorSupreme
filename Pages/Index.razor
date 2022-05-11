@@ -1,5 +1,6 @@
 ﻿@page "/"
 @inject Blazored.SessionStorage.ISessionStorageService sessionStorage
+@inject IJSRuntime JS
 
 <div class="container-fluid">
 	<div class=row>
@@ -45,13 +46,13 @@
 			@*save/load*@
 			<div class="row">
 				<div class="col">
-					<button class="btn btn-danger btn-lg" @onclick=PromptClearAll data-bs-toggle="modal" data-bs-target="#modalDanger">CLEAR<br />all</button>
+					<button class="btn btn-danger btn-lg" @onclick=PromptClearAll>CLEAR<br />all</button> @* data-bs-toggle="modal" data-bs-target="#modalDanger"*@
 				</div>
 				<div class="col">
-					<button class="btn btn-primary btn-lg">SAVE<br />to file</button>
+					<button class="btn btn-primary btn-lg" @onclick=SaveToFile>SAVE<br />to file</button>
 				</div>
 				<div class="col">
-					<button class="btn btn-primary btn-lg">LOAD<br />from file</button>
+					<button class="btn btn-primary btn-lg" @onclick=PromptLoadFile>LOAD<br />from file</button>
 				</div>
 			</div>@*save/load*@
 		</div>
@@ -89,5 +90,40 @@
 		string body = "Are you sure you want to delete everything? This cannot be undone.";
 		Action callback = DataManager.ClearAll;
 		ModalManager.SetModalData(header, body, callback);
+		JS.InvokeVoidAsync("showBootstrapModal", "#modalDanger");
+	}
+
+	async Task SaveToFile()
+	{
+		string fileName = DataManager.GeneratorCollectionName + ".json";
+		string saveData = DataManager.Save();
+
+		await JS.InvokeVoidAsync("downloadFile", fileName, saveData);
+	}
+
+	void PromptLoadFile()
+	{
+		if(DataManager.Data.Count > 0)
+		{
+			string header = "Load From File";
+			string body = "Loading data from a file will clear all of your existing data. Are you sure you want to do this?";
+			ModalManager.SetModalData(header, body, () => { LoadFromFile(); });
+			JS.InvokeVoidAsync("showBootstrapModal", "#modalDanger");
+		}
+		else
+		{
+			LoadFromFile();
+		}
+
+	}
+
+	async Task LoadFromFile()
+	{
+		string filedata = await JS.InvokeAsync<string>("loadLocalFile");
+
+		if(!string.IsNullOrEmpty(filedata))
+		{
+			DataManager.Load(filedata);
+		}
 	}
 }
