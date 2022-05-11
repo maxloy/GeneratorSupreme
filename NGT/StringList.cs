@@ -1,6 +1,7 @@
 ﻿//(c) 2018 Fancy Skeleton Games, Inc.
 
 using System.Text.Json;
+using System.Linq;
 
 namespace NameGenToolkit
 {
@@ -39,7 +40,10 @@ namespace NameGenToolkit
 				splits.Add(' ');
 			}
 
-			return text.Split(splits.ToArray());
+			var splitText = text.Split(splits.ToArray());
+			splitText = splitText.Where(s => !string.IsNullOrEmpty(s)).ToArray();
+
+			return splitText;
 		}
 
 		protected override void SaveData(Dictionary<string, dynamic> data)
@@ -57,8 +61,8 @@ namespace NameGenToolkit
 		protected override void LoadData(Dictionary<string, dynamic> data)
 		{
 			if (data.ContainsKey(nameof(RawValue)))
-{
-				RawValue = JsonSerializer.Deserialize(data[nameof(RawValue)]);
+			{
+				RawValue = JsonSerializer.Deserialize<string>(data[nameof(RawValue)]);
 			}
 
 			SplitOnNewline = JsonSerializer.Deserialize<bool>(data[nameof(SplitOnNewline)]);
