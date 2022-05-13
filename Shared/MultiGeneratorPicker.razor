@@ -8,9 +8,9 @@
 		{
 			int index = i; //note: gotta bind locally to this context or it won't work //I hate that this works
 			<div class="input-group d-flex align-middle">
-				<span class="input-group-text">@index</span>
+				<span class="input-group-text flex-shrink-1">@index</span>
 
-				<span class="w-75">
+				<span class="flex-grow-1 w-50">
 					<GeneratorPicker DataManager=DataManager
 								 Exclude=Exclude
 								 ID=@(ID + "_multi_" + index)
