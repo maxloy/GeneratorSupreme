@@ -1,5 +1,10 @@
-﻿.generator-accordion:not(.collapse)
-{
-    background-color:white;
-    color:black;
+﻿.generator-accordion {
+    border: none;
+    width: auto;
 }
+
+    .generator-accordion:not(.collapse) {
+        background-color: white;
+        color: black;
+        box-shadow: none;
+    }
